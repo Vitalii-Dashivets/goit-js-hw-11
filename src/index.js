@@ -30,7 +30,7 @@ Notify.init({
     width: '500px',
     fontSize: '25px',
     position: 'right-top',
-    timeout: '2000',
+    timeout: '1500',
     messageMaxLength: 150,
     distance: '20px',
     showOnlyTheLastOne: true,
@@ -119,7 +119,8 @@ async function fetchData(event) {
         
                
     } catch (error) {
-    
+        console.log(error);
+        options.set('page', `1`);
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");   
      }
           
