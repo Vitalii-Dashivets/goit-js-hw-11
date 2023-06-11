@@ -57,9 +57,9 @@ function renderMarkup(dataArray) {
     }
     refs.gallery.insertAdjacentHTML("beforeend", markup);
     new SimpleLightbox('.gallery a', optionsSet);
-    if (page >1) {
-        scrollPage();
-    }
+    // if (window.pageYOffset>200) {
+    //     scrollPage();
+    // }
   
 }
 
@@ -75,7 +75,7 @@ function scrollPage() {
   .firstElementChild.getBoundingClientRect();
 
 window.scrollBy({
-  top: cardHeight * 2,
+    top: cardHeight * 1.8,
   behavior: "smooth",
 });
 }

@@ -12,11 +12,28 @@ const refs = {
     gallery: document.querySelector(".gallery"),
     loadBtn: document.querySelector('.load-more'),
 };
-
+let throttle = require('lodash.throttle');
 refs.form.addEventListener('submit', fetchData);
 refs.loadBtn.addEventListener('click', onLoadMore);
 refs.loadBtn.classList.toggle('is-hidden');
 
+// window.addEventListener('scroll', throttle(() => { endlessScroll() },500));
+    
+ async function endlessScroll() {
+        
+            let clientRect = document.documentElement.getBoundingClientRect();
+            let clientHeightWindow=document.documentElement.clientHeight;
+            
+     if (clientRect.bottom < clientHeightWindow + 350) {
+         console.log(clientRect.bottom);
+         
+                onLoadMore();
+            };
+            
+        
+    // document.getElementById('search-form').innerHTML = window.pageYOffset + 'px';
+   
+};
 
     
 Notify.init({
@@ -41,7 +58,8 @@ Notify.init({
 
 const options =new URLSearchParams( {
     key: API_KEY,
-    per_page: 40,
+    page: 1,
+    per_page: 8,
     q: null,
     image_type: 'photo',
     orientation: 'horizontal',
@@ -58,7 +76,7 @@ let maxPage = 1;
 async function fetchData(event) {
     try {
         event.preventDefault();
-                
+        page = Number(options.get('page'));
         let inputValue = event.currentTarget.elements.searchQuery.value;
 
         if (options.get('q') !== inputValue) {
@@ -73,7 +91,7 @@ async function fetchData(event) {
             throw new Error(error);
         }
         const result = await fetchUrl(`${BASE_URL}?${options}`);
-                console.log(result);
+        console.log(`${BASE_URL}?${options}`);
         totalHits = result.data.totalHits;
         if (totalHits < perPage) {
             refs.loadBtn.classList.add('is-hidden');
@@ -91,15 +109,20 @@ async function fetchData(event) {
                 
         clearMarkup();
         renderMarkup(result.data.hits);
+        page += 1;
+        options.set('page', `${page}`);
         if (totalHits < perPage) {
+            
             refs.loadBtn.classList.add('is-hidden');
         }
-        if (page = maxPage) {
+        window.addEventListener('scroll', throttle(() => { endlessScroll(); },600));
+        if (page === maxPage) {
                
              page = 1;
             options.set('page', `${page}`);
+        window.removeEventListener('scroll', throttle(() => { endlessScroll(); },600));
+        }
         
-         }
                
     } catch (error) {
         console.log(error);
@@ -108,36 +131,39 @@ async function fetchData(event) {
           
 };
 
+
+
 async function onLoadMore() {
     try {
-       
-       page = Number(options.get('page'));
+      
+        page = Number(options.get('page'));
+        console.log('currentPage', page);
+       if (page > maxPage) {
+                
+           console.log('Знімаємо слухача');
+                            
+            window.removeEventListener('scroll', throttle(() => { endlessScroll(); },600));
+           refs.loadBtn.classList.add('is-hidden');
+           return;
+                
+            }       
        refs.loadBtn.classList.add('is-hidden');
-
+       console.log(`${BASE_URL}?${options}`);
        const result = await fetchUrl(`${BASE_URL}?${options}`);
        
-       refs.loadBtn.classList.remove('is-hidden');
+       refs.loadBtn.classList.remove('is-hidden');     
+         
+       renderMarkup(result.data.hits);
             
-       
-        console.log('result', result);
-       
-        if (page <= maxPage) {
-            renderMarkup(result.data.hits);
-            page = Number(options.get('page'));
-            page += 1;
-            options.set('page', `${page}`);
-            console.log('після розмітки',page);
-        }
-        if (page > maxPage) {
-            page = 1;
-            maxPage = 1;
-            throw new Error(error);
-            }
+        page += 1;              
+           
+        options.set('page', `${page}`);
+        console.log('після розмітки', options.get('page'));
         
         return result;
         
     } catch (error) {
-        console.log(error);
+       
         refs.loadBtn.classList.add('is-hidden');
             }
 }
