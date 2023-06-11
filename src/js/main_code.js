@@ -69,13 +69,13 @@ function clearMarkup() {
 
 export { fetchUrl, renderMarkup, clearMarkup };
 
-function scrollPage() {
-    const { height: cardHeight } = document
-  .querySelector(".gallery")
-  .firstElementChild.getBoundingClientRect();
+// function scrollPage() {
+//     const { height: cardHeight } = document
+//   .querySelector(".gallery")
+//   .firstElementChild.getBoundingClientRect();
 
-window.scrollBy({
-    top: cardHeight * 1.8,
-  behavior: "smooth",
-});
-}
+// window.scrollBy({
+//     top: cardHeight * 1.8,
+//   behavior: "smooth",
+// });
+// }

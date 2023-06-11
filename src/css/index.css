@@ -66,6 +66,8 @@ body {
   font-style: italic;
   border-radius: 15px;
   overflow: hidden;
+  box-shadow: 0px 2px 1px rgba(46, 47, 66, 0.08),
+    0px 2px 4px rgba(46, 47, 66, 0.16), 0px 3px 6px rgba(46, 47, 66, 0.08);
   transition: transform 400ms ease-out;
 }
 

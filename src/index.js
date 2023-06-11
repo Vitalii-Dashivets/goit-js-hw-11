@@ -1,6 +1,6 @@
 import { fetchUrl, renderMarkup,clearMarkup } from "./js/main_code.js";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
+import "./css/loader.css";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 
@@ -11,12 +11,13 @@ const refs = {
     form: document.querySelector('.search-form'),
     gallery: document.querySelector(".gallery"),
     loadBtn: document.querySelector('.load-more'),
+     alertLoader : document.querySelector('.loader'),
 };
 let throttle = require('lodash.throttle');
 refs.form.addEventListener('submit', fetchData);
 refs.loadBtn.addEventListener('click', onLoadMore);
 refs.loadBtn.classList.toggle('is-hidden');
-
+refs.alertLoader.classList.add('is-hidden');
 
     
  async function endlessScroll() {
@@ -89,7 +90,9 @@ async function fetchData(event) {
             refs.loadBtn.classList.add('is-hidden');
             throw new Error(error);
         }
+        refs.alertLoader.classList.toggle('is-hidden');
         const result = await fetchUrl(`${BASE_URL}?${options}`);
+        refs.loadBtn.classList.remove('is-hidden');
         console.log(`${BASE_URL}?${options}`);
         totalHits = result.data.totalHits;
         if (totalHits < perPage) {
@@ -108,6 +111,7 @@ async function fetchData(event) {
                 
         clearMarkup();
         renderMarkup(result.data.hits);
+       refs.alertLoader.classList.toggle('is-hidden');
         page += 1;
         options.set('page', `${page}`);
         if (totalHits < perPage) {
@@ -147,13 +151,14 @@ async function onLoadMore() {
                 
             }       
        refs.loadBtn.classList.add('is-hidden');
-       console.log(`${BASE_URL}?${options}`);
+        console.log(`${BASE_URL}?${options}`);
+       refs.alertLoader.classList.toggle('is-hidden');
        const result = await fetchUrl(`${BASE_URL}?${options}`);
-       
-       refs.loadBtn.classList.remove('is-hidden');     
+                   
          
-       renderMarkup(result.data.hits);
-            
+        renderMarkup(result.data.hits);
+        refs.loadBtn.classList.remove('is-hidden');
+        refs.alertLoader.classList.toggle('is-hidden');
         page += 1;              
            
         options.set('page', `${page}`);
