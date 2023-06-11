@@ -17,22 +17,21 @@ refs.form.addEventListener('submit', fetchData);
 refs.loadBtn.addEventListener('click', onLoadMore);
 refs.loadBtn.classList.toggle('is-hidden');
 
-// window.addEventListener('scroll', throttle(() => { endlessScroll() },500));
+
     
  async function endlessScroll() {
         
             let clientRect = document.documentElement.getBoundingClientRect();
             let clientHeightWindow=document.documentElement.clientHeight;
             
-     if (clientRect.bottom < clientHeightWindow + 350) {
+     if (clientRect.bottom < clientHeightWindow + 400) {
          console.log(clientRect.bottom);
          
                 onLoadMore();
             };
             
         
-    // document.getElementById('search-form').innerHTML = window.pageYOffset + 'px';
-   
+    
 };
 
     
