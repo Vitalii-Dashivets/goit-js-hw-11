@@ -58,7 +58,7 @@ body {
   padding: 20px var(--flex-gap);
 }
 .photo-card {
-  width: calc((1400px - 5 * var(--flex-gap)) / 4);
+  width: calc((1440px - 5 * var(--flex-gap)) / 4);
   background-color: var(--background-color-card);
   text-decoration: none;
   font-size: 20px;

@@ -59,7 +59,7 @@ function renderMarkup(dataArray) {
     if (page === 1) {
         gallery = new SimpleLightbox('.gallery a', optionsSet);
     }
-    if (page > 1) {
+    else{
         gallery.refresh();
     }
     
