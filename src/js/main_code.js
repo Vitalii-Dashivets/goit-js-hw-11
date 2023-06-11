@@ -1,29 +1,81 @@
-const API_KEY = '37137188-6bb810a50b61d3532d7744a01';
-const BASE_URL = 'https://pixabay.com/api/';
-const refs = {
-    form: document.getElementById('search-form'),
+import { refs ,page} from "../index.js";
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+const axios = require('axios').default;
+
+const optionsSet = {
     
-};
-refs.form.addEventListener('submit', fetchData);
-const options = {
-    key: API_KEY,
-    q: '',
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true,
+    captionDelay: 250,
+    captionsData: 'alt',
+    animationSpeed: 300,
+    swipeTolerance: 50,
+    fadeSpeed: 300,
+    scrollZoomFactor: 0.1,
+}  
+
+async function fetchUrl(url) {
+     try {
+         const data = await axios.get(url);
+          console.log(data);
+        return data;
+     } catch (error) {
+        //  Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+          console.log(error);
+        
+     }
+     
+     
+     
+         
 }
 
-function fetchData(event) {
-     event.preventDefault();
-    console.log(event);
-    getInputData();
-    console.log(options.q);
-    return;
+function renderMarkup(dataArray) {
+    if (dataArray.length === 0) {
+        return;
+    }
+    const markup = dataArray.map(({ webformatURL,likes,views,comments,downloads,tags,largeImageURL }) => 
+        `<a href="${largeImageURL}" class="photo-card">
+  <img src="${webformatURL}" alt="${tags}" loading="lazy" " />
+  <div class="info">
+    <p class="info-item">
+      <b>Likes</b>${likes}
+    </p>
+    <p class="info-item">
+      <b>Views</b>${views}
+    </p>
+    <p class="info-item">
+      <b>Comments</b>${comments}
+    </p>
+    <p class="info-item">
+      <b>Downloads</b>${downloads}
+    </p>
+  </div>
+</a>`
+    ).join('');
+    if (refs.loadBtn.classList.contains('is-hidden')) {
+        refs.loadBtn.classList.remove('is-hidden');
+    }
+    refs.gallery.insertAdjacentHTML("beforeend", markup);
+    new SimpleLightbox('.gallery a', optionsSet);
+    if (page >1) {
+        scrollPage();
+    }
+  
 }
 
-function getInputData(event) {
-    options.q = event.currentTarget.elements.searchQuery.value;
-    console.log(options.q);
-    return options.q;
+function clearMarkup() {
+    return refs.gallery.innerHTML = "";
 }
-export { refs, API_KEY,fetchData};
+
+export { fetchUrl, renderMarkup, clearMarkup };
+
+function scrollPage() {
+    const { height: cardHeight } = document
+  .querySelector(".gallery")
+  .firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: "smooth",
+});
+}
