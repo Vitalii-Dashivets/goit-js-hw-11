@@ -19,7 +19,7 @@ async function fetchUrl(url) {
           console.log(data);
         return data;
      } catch (error) {
-        //  Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+        
           console.log(error);
         
      }

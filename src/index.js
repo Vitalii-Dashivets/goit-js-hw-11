@@ -1,6 +1,6 @@
 import { fetchUrl, renderMarkup,clearMarkup } from "./js/main_code.js";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-// import SimpleLightbox from "simplelightbox";
+
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 
@@ -58,9 +58,9 @@ let maxPage = 1;
 async function fetchData(event) {
     try {
         event.preventDefault();
-        
-        
-        const inputValue = event.currentTarget.elements.searchQuery.value;
+                
+        let inputValue = event.currentTarget.elements.searchQuery.value;
+
         if (options.get('q') !== inputValue) {
             options.set('page', `1`);
             options.set('q', `${inputValue}`);
@@ -68,72 +68,56 @@ async function fetchData(event) {
                              
         if (page > maxPage) {
             error = 'max page limit';
+            maxPage = 1;
+            refs.loadBtn.classList.add('is-hidden');
             throw new Error(error);
         }
         const result = await fetchUrl(`${BASE_URL}?${options}`);
-        // const result = await response.json();
-        console.log(result);
+                console.log(result);
         totalHits = result.data.totalHits;
-        Notify.success(`Hooray! We found ${totalHits} images.`);
+        if (totalHits < perPage) {
+            refs.loadBtn.classList.add('is-hidden');
+        }
+        if (totalHits === 0) {
+            Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+           
+        } else {
+             Notify.success(`Hooray! We found ${totalHits} images.`);
+            
+        }
         maxPage=Math.ceil(totalHits / perPage);
         console.log('maxPage',maxPage);
-
-        // if (result.hits.length === 0) {
-        //     Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-        //     error = 'length of array is zero';
-        //     throw new Error(error);
-        //     // // console.log(result);
-                  
-        // }
-        
-        
-        
+          
+                
         clearMarkup();
-         renderMarkup(result.data.hits);
-        // if (page <= maxPage) {
-        //     renderMarkup(result.hits);
-        //     page = Number(options.get('page'));
-            page += 1;
-            options.set('page', `${page}`);
-        //     console.log('після розмітки',page);
-        // }
-        if (page > maxPage) {
-            page === maxPage;
-            Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+        renderMarkup(result.data.hits);
+        if (totalHits < perPage) {
             refs.loadBtn.classList.add('is-hidden');
-            return
-            };
-
+        }
+        if (page = maxPage) {
+               
+             page = 1;
+            options.set('page', `${page}`);
         
+         }
+               
     } catch (error) {
         console.log(error);
-      
-        // Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-        
-        
-    }
+                  
+           }
           
 };
 
 async function onLoadMore() {
     try {
        
-        page = Number(options.get('page'));
-        refs.loadBtn.classList.add('is-hidden');
+       page = Number(options.get('page'));
+       refs.loadBtn.classList.add('is-hidden');
 
        const result = await fetchUrl(`${BASE_URL}?${options}`);
        
        refs.loadBtn.classList.remove('is-hidden');
-
-        if (result.data.hits.length === 0) {
-            console.log(options.get('page'));
-            error = 'length of array is zero';
-            throw new Error(error);
-            // console.log(result);
-                   
-        }
-     
-       
+            
        
         console.log('result', result);
        
@@ -145,17 +129,17 @@ async function onLoadMore() {
             console.log('після розмітки',page);
         }
         if (page > maxPage) {
-                
-                throw new Error(error);
+            page = 1;
+            maxPage = 1;
+            throw new Error(error);
             }
         
         return result;
         
     } catch (error) {
+        console.log(error);
         refs.loadBtn.classList.add('is-hidden');
-        //  Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-        //  console.log('error',options.get('page'));
-    }
+            }
 }
 
 
