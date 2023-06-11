@@ -59,7 +59,7 @@ Notify.init({
 const options =new URLSearchParams( {
     key: API_KEY,
     page: 1,
-    per_page: 8,
+    per_page: 40,
     q: null,
     image_type: 'photo',
     orientation: 'horizontal',
