@@ -1,8 +1,8 @@
 import { refs ,page} from "../index.js";
-import SimpleLightbox from "simplelightbox";
+import SimpleLightbox from 'simplelightbox';
 import "simplelightbox/dist/simple-lightbox.min.css";
 const axios = require('axios').default;
-
+ let gallery = null;
 const optionsSet = {
     
     captionDelay: 250,
@@ -56,7 +56,13 @@ function renderMarkup(dataArray) {
         refs.loadBtn.classList.remove('is-hidden');
     }
     refs.gallery.insertAdjacentHTML("beforeend", markup);
-    new SimpleLightbox('.gallery a', optionsSet);
+   
+    if (page === 1) {
+        gallery = new SimpleLightbox('.gallery a', optionsSet);
+    }
+    if (page > 1) {
+        gallery.refresh();
+    }
     // if (window.pageYOffset>200) {
     //     scrollPage();
     // }
