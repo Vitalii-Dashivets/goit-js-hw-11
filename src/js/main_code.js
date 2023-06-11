@@ -23,9 +23,8 @@ async function fetchUrl(url) {
           console.log(error);
         
      }
-     
-     
-     
+          
+    
          
 }
 
@@ -63,10 +62,7 @@ function renderMarkup(dataArray) {
     if (page > 1) {
         gallery.refresh();
     }
-    // if (window.pageYOffset>200) {
-    //     scrollPage();
-    // }
-  
+    
 }
 
 function clearMarkup() {
