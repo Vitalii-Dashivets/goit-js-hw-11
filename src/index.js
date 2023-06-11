@@ -118,7 +118,7 @@ async function fetchData(event) {
             
             refs.loadBtn.classList.add('is-hidden');
         }
-        window.addEventListener('scroll', throttle(() => { endlessScroll(); },600));
+        window.addEventListener('scroll', throttle(() => { endlessScroll(); },1000));
         if (page === maxPage) {
                
              page = 1;
@@ -129,7 +129,7 @@ async function fetchData(event) {
                
     } catch (error) {
         console.log(error);
-                  
+               Notify.failure("Sorry, there are no images matching your search query. Please try again.");   
            }
           
 };
