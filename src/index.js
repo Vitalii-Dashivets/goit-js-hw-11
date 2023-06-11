@@ -3,37 +3,27 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import "./css/loader.css";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-
+let throttle = require('lodash.throttle');
 const axios = require('axios').default;
+
 const API_KEY = '37137188-6bb810a50b61d3532d7744a01';
 const BASE_URL = 'https://pixabay.com/api/';
+
 const refs = {
     form: document.querySelector('.search-form'),
     gallery: document.querySelector(".gallery"),
     loadBtn: document.querySelector('.load-more'),
      alertLoader : document.querySelector('.loader'),
 };
-let throttle = require('lodash.throttle');
+
+
 refs.form.addEventListener('submit', fetchData);
 refs.loadBtn.addEventListener('click', onLoadMore);
 refs.loadBtn.classList.toggle('is-hidden');
 refs.alertLoader.classList.add('is-hidden');
 
     
- async function endlessScroll() {
-        
-            let clientRect = document.documentElement.getBoundingClientRect();
-            let clientHeightWindow=document.documentElement.clientHeight;
-            
-     if (clientRect.bottom < clientHeightWindow + 400) {
-         console.log(clientRect.bottom);
-         
-                onLoadMore();
-            };
-            
-        
-    
-};
+ 
 
     
 Notify.init({
@@ -91,10 +81,11 @@ async function fetchData(event) {
             throw new Error(error);
         }
         refs.alertLoader.classList.toggle('is-hidden');
+
         const result = await fetchUrl(`${BASE_URL}?${options}`);
         refs.loadBtn.classList.remove('is-hidden');
-        console.log(`${BASE_URL}?${options}`);
         totalHits = result.data.totalHits;
+
         if (totalHits < perPage) {
             refs.loadBtn.classList.add('is-hidden');
         }
@@ -102,35 +93,35 @@ async function fetchData(event) {
             Notify.failure("Sorry, there are no images matching your search query. Please try again.");
            
         } else {
-             Notify.success(`Hooray! We found ${totalHits} images.`);
+            Notify.success(`Hooray! We found ${totalHits} images.`);
             
         }
-        maxPage=Math.ceil(totalHits / perPage);
-        console.log('maxPage',maxPage);
-          
-                
+
+        maxPage=Math.ceil(totalHits / perPage);      
         clearMarkup();
         renderMarkup(result.data.hits);
-       refs.alertLoader.classList.toggle('is-hidden');
+
+        refs.alertLoader.classList.toggle('is-hidden');
         page += 1;
         options.set('page', `${page}`);
+
         if (totalHits < perPage) {
             
-            refs.loadBtn.classList.add('is-hidden');
+          refs.loadBtn.classList.add('is-hidden');
         }
         window.addEventListener('scroll', throttle(() => { endlessScroll(); },1000));
         if (page === maxPage) {
                
-             page = 1;
+            page = 1;
             options.set('page', `${page}`);
-        window.removeEventListener('scroll', throttle(() => { endlessScroll(); },600));
+            window.removeEventListener('scroll', throttle(() => { endlessScroll(); },1000));
         }
         
                
     } catch (error) {
-        console.log(error);
-               Notify.failure("Sorry, there are no images matching your search query. Please try again.");   
-           }
+    
+        Notify.failure("Sorry, there are no images matching your search query. Please try again.");   
+     }
           
 };
 
@@ -140,37 +131,42 @@ async function onLoadMore() {
     try {
       
         page = Number(options.get('page'));
-        console.log('currentPage', page);
-       if (page > maxPage) {
-                
-           console.log('Знімаємо слухача');
-                            
-            window.removeEventListener('scroll', throttle(() => { endlessScroll(); },600));
+       
+       if (page > maxPage) {              
+          
+           window.removeEventListener('scroll', throttle(() => { endlessScroll(); },600));
            refs.loadBtn.classList.add('is-hidden');
-           return;
-                
-            }       
+           return;               
+        }  
+        
        refs.loadBtn.classList.add('is-hidden');
-        console.log(`${BASE_URL}?${options}`);
        refs.alertLoader.classList.toggle('is-hidden');
-       const result = await fetchUrl(`${BASE_URL}?${options}`);
-                   
+        
+       const result = await fetchUrl(`${BASE_URL}?${options}`);                
          
         renderMarkup(result.data.hits);
+
         refs.loadBtn.classList.remove('is-hidden');
         refs.alertLoader.classList.toggle('is-hidden');
         page += 1;              
-           
-        options.set('page', `${page}`);
-        console.log('після розмітки', options.get('page'));
-        
+        options.set('page', `${page}`);                
         return result;
         
     } catch (error) {
-       
         refs.loadBtn.classList.add('is-hidden');
-            }
+    }
 }
 
+
+async function endlessScroll() {
+        
+    let clientRect = document.documentElement.getBoundingClientRect();
+    let clientHeightWindow=document.documentElement.clientHeight;
+            
+    if (clientRect.bottom < clientHeightWindow + 400) {
+                
+        onLoadMore();
+    };                      
+};
 
 export {refs, page };

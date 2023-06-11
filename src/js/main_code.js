@@ -1,10 +1,11 @@
 import { refs ,page} from "../index.js";
 import SimpleLightbox from 'simplelightbox';
 import "simplelightbox/dist/simple-lightbox.min.css";
+
 const axios = require('axios').default;
- let gallery = null;
+let gallery = null;
+
 const optionsSet = {
-    
     captionDelay: 250,
     captionsData: 'alt',
     animationSpeed: 300,
@@ -16,11 +17,9 @@ const optionsSet = {
 async function fetchUrl(url) {
      try {
          const data = await axios.get(url);
-          console.log(data);
-        return data;
+         return data;
      } catch (error) {
-        
-          console.log(error);
+         console.log(error);
         
      }
           
