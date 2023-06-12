@@ -1,8 +1,9 @@
 import { refs ,page} from "../index.js";
 import SimpleLightbox from 'simplelightbox';
 import "simplelightbox/dist/simple-lightbox.min.css";
+import axios from 'axios';
 
-const axios = require('axios').default;
+// const axios = require('axios').default;
 let gallery = null;
 
 const optionsSet = {

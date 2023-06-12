@@ -2,9 +2,9 @@ import { fetchUrl, renderMarkup,clearMarkup } from "./js/main_code.js";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import "./css/loader.css";
 import "simplelightbox/dist/simple-lightbox.min.css";
-
+import axios from 'axios';
 let throttle = require('lodash.throttle');
-const axios = require('axios').default;
+// const axios = require('axios').default;
 
 const API_KEY = '37137188-6bb810a50b61d3532d7744a01';
 const BASE_URL = 'https://pixabay.com/api/';
