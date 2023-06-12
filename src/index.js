@@ -59,7 +59,7 @@ const options =new URLSearchParams( {
 let page = Number(options.get('page'));
 let perPage = Number(options.get('per_page'));
 let totalHits = 0;
-let maxPage = 1;
+let maxPage = 10;
 
 
 
@@ -69,6 +69,7 @@ async function fetchData(event) {
         page = Number(options.get('page'));
         let inputValue = (event.currentTarget.elements.searchQuery.value).trim();
         if (inputValue === "") {
+            options.set('page', `1`);
             Notify.failure("Invalid value. Input text, please.");
            
             return;
