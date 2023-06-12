@@ -67,8 +67,12 @@ async function fetchData(event) {
     try {
         event.preventDefault();
         page = Number(options.get('page'));
-        let inputValue = event.currentTarget.elements.searchQuery.value;
-
+        let inputValue = (event.currentTarget.elements.searchQuery.value).trim();
+        if (inputValue === "") {
+            Notify.failure("Invalid value. Input text, please.");
+           
+            return;
+        }
         if (options.get('q') !== inputValue) {
             options.set('page', `1`);
             options.set('q', `${inputValue}`);
