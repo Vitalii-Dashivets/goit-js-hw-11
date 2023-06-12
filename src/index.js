@@ -81,7 +81,7 @@ async function fetchData(event) {
                              
         if (page > maxPage) {
             error = 'max page limit';
-            maxPage = 1;
+             maxPage = 10;
             refs.loadBtn.classList.add('is-hidden');
             throw new Error(error);
         }
